@@ -17,3 +17,6 @@ trabajo y agilizar las tareas de búsqueda de interferencias.
 Diseño de un dispositivo que será utilizado como una herramienta adicional y complementaria a las
 existentes para facilitar las tareas de mantenimiento en redes HFC, específicamente simplificar la
 búsqueda de ruido y detección de interferencias en la banda de UPSTREAM en los nodos.
+
+![server](https://github.com/AGalfra/switching-return/blob/main/server-render3.png?raw=true)
+![remoto](https://github.com/AGalfra/switching-return/blob/main/rem-render3.png?raw=true)
