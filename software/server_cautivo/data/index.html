@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <title>Server</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <!-- <title></title> -->
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <link rel="stylesheet" href="css/main.css">
+  <!-- agregado de prueba -->
+  <!-- <link rel="stylesheet" href="vendor/material.css"> -->
+     
+  <link rel="stylesheet" href="./vendor/google-fonts.css">
+  <link rel="stylesheet" href="./vendor/vuetify.min.css">  
+  
+
+  <v-app id="app">    // Dentro de este contenedor utilizo Vue
+  
+    <v-toolbar app>
+      <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>      
+
+      <v-toolbar-title sm6>Control de Retorno</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-icon large v-if=      "rssi >= -122" :color="'green'">signal_cellular_alt</v-icon>
+        <v-icon large v-else-if= "rssi >= -134" :color="'yellow'">signal_cellular_alt</v-icon>   
+        <v-icon large v-else                    :color="'red'">signal_cellular_alt</v-icon>     
+        {{rssi}}                   
+        dBm            
+    </v-toolbar>      
+    
+    <v-navigation-drawer app v-model="drawer" temporary >           
+      <v-layout ma-1 column >
+        <v-flex>
+          <v-icon large @click="drawer = !drawer">menu_open</v-icon>                 
+          <v-divider class="ma-1"></v-divider>
+          <h3 class="mb-2">Configuración Lora</h3>
+          
+          <v-list subheader>
+            <lora_cfg v-for="item in lora_cfg_list" v-bind:lora_cfg="item" v-bind:key="item.id" />
+          </v-list>
+        
+          <v-list subheader>
+            <action v-for="item in action_list" v-bind:action="item" v-bind:key="item.id" />
+          </v-list>
+
+
+          <v-divider class="ma-1"></v-divider>
+          <h3 class="mb-2">Niveles de Recepción - RSSI</h3>
+          LoRa: 
+          <v-icon large v-if=      "rssi >= -122" :color="'green'">signal_cellular_alt</v-icon>
+          <v-icon large v-else-if= "rssi >= -134" :color="'yellow'">signal_cellular_alt</v-icon>   
+          <v-icon large v-else                    :color="'red'">signal_cellular_alt</v-icon>     
+          {{rssi}}                   
+          dBm
+          <v-spacer></v-spacer>
+          WiFi: 
+          <v-icon large v-if=      "signal >= -85" :color="'green'">wifi</v-icon>
+          <v-icon large v-else-if= "signal >= -95" :color="'yellow'">wifi</v-icon>
+          <v-icon large v-else                     :color="'red'">wifi</v-icon>
+          {{signal}}                   
+          dBm
+          
+          <v-divider class="ma-1"></v-divider>
+          <h3 class="mb-2">Información - Conexión WiFi</h3>
+          SSID: {{ssid}}
+          <v-spacer></v-spacer> 
+          IP: {{ip}}
+          <v-spacer></v-spacer>
+          MAC: {{mac}}
+          <v-spacer></v-spacer>
+          Channel: {{channel}}
+          <v-spacer></v-spacer>
+          
+          <!-- <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>SSID:</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title class="ml-5">{{ssid}}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          
+          <v-list-tile>                  
+            <v-list-tile-content>
+              <v-list-tile-title>IP:</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title class="ml-5">{{ip}}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>          
+          
+          <v-list-tile>                  
+            <v-list-tile-content>
+              <v-list-tile-title>MAC:</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title >{{mac}}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          
+          <v-list-tile>                  
+            <v-list-tile-content>
+              <v-list-tile-title>Channel:</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title>{{channel}}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile> -->
+          <v-divider></v-divider>
+
+        </v-flex>        
+      </v-layout>
+    </v-navigation-drawer>  
+    
+    <v-content> 
+
+      <v-container fluid grid-list-md text-xs-center >
+        <v-layout row wrap>
+
+          <v-flex s6>
+            <v-card>
+              <v-toolbar color="blue" dark>
+                <v-toolbar-title class="text-xs-center">Control de Puertos</v-toolbar-title>
+              </v-toolbar>
+
+              <v-list subheader>
+                <gpio-output v-for="item in gpio_output_list" v-bind:gpio="item" v-bind:key="item.id" />
+              </v-list>
+            </v-card>
+          </v-flex>  
+          
+          <!-- <v-flex s6>
+            <v-card>
+              <v-toolbar color="blue" dark>
+                <v-toolbar-title class="text-xs-center">Acciones</v-toolbar-title>
+              </v-toolbar>
+
+              <v-list subheader>
+                  <action v-for="item in action_list" v-bind:action="item" v-bind:key="item.id" />
+              </v-list>
+            </v-card>
+          </v-flex> -->
+
+        </v-layout>
+      </v-container>
+
+    </v-content>
+
+  </v-app>
+
+  <!-- agregado de prueba -->
+  <!-- <script src="vendor/material.js"></script> -->
+
+  <!-- Desde CDN -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script> -->
+  <!-- Desde ESP8266 -->
+  <script type="text/javascript" src="./vendor/vue.min.js"></script>
+
+  <!-- <script type="text/javascript" src="./vendor/vuetify.min.js"></script> -->
+  <script type="text/javascript" src="./vendor/vuetify.min.js"></script>
+  
+
+  <script type="text/javascript" src="./vendor/nativeWs.min.js"></script>
+
+  <!-- Cargamos el fichero que contiene nuestra App en Vue.JS -->
+  <script type="text/javascript" src="./js/app.js"></script>
+</body>
+
+</html>
